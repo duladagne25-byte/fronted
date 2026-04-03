@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EthioEdu - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 EthioEdu | Ethiopia Education Hub</h1>
+            <div class="user-info" id="userInfo"></div>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- Login View -->
+        <div id="loginView">
+            <div class="card">
+                <h2>🔐 Login to Your Account</h2>
+                <div id="loginError" class="error-message"></div>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="login()">Login</button>
+                <hr>
+                <h3>📝 New Student Registration</h3>
+                <input type="text" id="regName" placeholder="Full Name">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPassword" placeholder="Password">
+                <select id="regRegion">
+                    <option value="">Select Region</option>
+                    <option>Tigray</option><option>Addis Ababa</option><option>Sidama</option>
+                    <option>Amhara</option><option>Oromia</option><option>SNNPR</option>
+                    <option>Harari</option><option>Gambella</option><option>Benishangul-Gumuz</option>
+                    <option>Afar</option><option>Somali</option><option>Dire Dawa</option>
+                </select>
+                <input type="text" id="regCity" placeholder="City">
+                <select id="regCourse">
+                    <option value="">Select Course</option>
+                    <option>JavaScript Mastery</option><option>UI/UX Design</option>
+                    <option>Frontend Pro</option><option>Backend Basics</option>
+                    <option>React & UI</option>
+                    <option>Full Stack Development</option>
+                    <option>Python Programming</option>
+                </select>
+                <button onclick="register()">📝 Register (Payment Pending)</button>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboardView" style="display: none;">
+            <div class="stats-grid" id="statsGrid"></div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('students')">👨‍🎓 Students</div>
+                <div class="tab" onclick="showTab('materials')">📹 Materials</div>
+                <div class="tab" onclick="showTab('payment')">💰 Payment</div>
+            </div>
+            
+            <div id="studentsTab">
+                <div class="card">
+                    <h2>👨‍🎓 Student Management</h2>
+                    <div id="studentsList"></div>
+                </div>
+            </div>
+            
+            <div id="materialsTab" style="display: none;">
+                <div class="card">
+                    <h2>📚 Learning Materials</h2>
+                    <div id="adminMaterialPanel" style="display: none;">
+                        <div class="admin-panel">
+                            <h3>➕ Admin: Upload New Material</h3>
+                            <input type="text" id="materialTitle" placeholder="Title">
+                            <select id="materialType">
+                                <option value="video">🎥 Video (YouTube)</option>
+                                <option value="file">📄 File (PDF/DOC)</option>
+                            </select>
+                            <input type="text" id="materialUrl" placeholder="YouTube URL or File Link">
+                            <textarea id="materialDesc" placeholder="Description" rows="3"></textarea>
+                            <button onclick="uploadMaterial()">📤 Upload</button>
+                        </div>
+                    </div>
+                    <div id="materialsList"></div>
+                </div>
+            </div>
+            
+            <div id="paymentTab" style="display: none;">
+                <div class="card">
+                    <h2>💰 Payment & Access</h2>
+                    <div id="paymentInfo"></div>
+                    <div id="paymentButton"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>✏️ Edit Student</h3>
+            <input type="text" id="editName" placeholder="Full Name">
+            <input type="text" id="editCity" placeholder="City">
+            <select id="editCourse">
+                <option>JavaScript Mastery</option><option>UI/UX Design</option>
+                <option>Frontend Pro</option><option>Backend Basics</option><option>React & UI</option>
+            </select>
+            <button onclick="saveEdit()">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        
+        // 🔥 REPLACE WITH YOUR FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        window.db = db;
+        window.auth = auth;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.query = query;
+        window.where = where;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.signOut = signOut;
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
